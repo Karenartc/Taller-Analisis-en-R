@@ -57,6 +57,37 @@ ggplot(top_10_perfiles,
   theme_minimal()
 
 #2. Genero y compra
+tasa_por_genero <- datos %>%
+  group_by(sexo) %>%
+  summarise(
+    total_clientes = n(),
+    total_compradores = sum(compra_promo == "SI"),
+    tasa_conversion = (total_compradores / total_clientes) * 100
+  ) %>%
+  ungroup() %>%
+  mutate(
+    destacado = if_else(tasa_conversion == max(tasa_conversion), "Máxima Conversión", "Menor Conversión")
+  )
+print(tasa_por_genero)
+
+ggplot(tasa_por_genero, aes(x = sexo, y = tasa_conversion, fill = destacado)) +
+  geom_col() +
+  geom_text(aes(label = paste0(round(tasa_conversion, 1), "%"))) +
+  
+  scale_fill_manual(
+    name = "Resultado del Análisis", 
+    values = c("Máxima Conversión" = "#1aab6c", "Menor Conversión" = "#967111")
+  ) +
+  
+  labs(
+    title = "Tasa de Conversión por Género",
+    subtitle = "El género con la mayor tasa de conversión es resaltado automáticamente",
+    x = "Género",
+    y = "Tasa de Conversión (%)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
 #3. Educacion y compra
 #4. Estados de deuda
 #5. Monto de compra
