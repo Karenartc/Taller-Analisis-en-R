@@ -89,13 +89,33 @@ ggplot(tasa_por_genero, aes(x = sexo, y = tasa_conversion, fill = destacado)) +
   theme(legend.position = "bottom")
 
 #3. Educacion y compra
+tasa_por_educacion <- datos %>%
+  group_by(educacion) %>%
+  summarise(
+    total_clientes = n(),
+    total_compradores = sum(compra_promo == "SI"),
+    tasa_conversion = (total_compradores / total_clientes) * 100
+  ) %>%
+  arrange(desc(tasa_conversion))
+print(tasa_por_educacion)
+
+ggplot(tasa_por_educacion, aes(x = tasa_conversion, y = fct_reorder(educacion, tasa_conversion), fill = educacion)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = paste0(round(tasa_conversion, 1), "%"))) +
+  labs(
+    title = "Tasa de Conversión por Nivel Educacional",
+    subtitle = "Porcentaje de clientes de cada nivel que compraron la promoción",
+    x = "Tasa de Conversión (%)",
+    y = "Nivel Educacional"
+  ) +
+  scale_x_continuous(limits = c(0, max(tasa_por_educacion$tasa_conversion) * 1.1)) +
+  theme_minimal()
+
 #4. Estados de deuda
 #5. Monto de compra
 #6. Uso del cupo
 #7. Historial de atrasos
 #8. Antiguedad del cliente
-#9. Actividad laboral
-#10. Consumo de productos A y B
 
 #Requerimientos predictivos
 
@@ -107,5 +127,3 @@ ggplot(tasa_por_genero, aes(x = sexo, y = tasa_conversion, fill = destacado)) +
 #6. Prediccion por perfil financiero
 #7. Estimacion de compras futuras del producto A
 #8. Prediccion de pagos de consumos
-#9. Relacion entre antiguedad y compra
-#10. Prediccion de consumo especifico
