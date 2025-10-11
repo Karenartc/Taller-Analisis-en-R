@@ -154,6 +154,27 @@ ggplot(tasa_por_salud, aes(x = salud_financiera, y = tasa_conversion, fill = sal
 
 
 #5. Monto de compra
+resumen_monto_compras <- datos %>%
+  group_by(compra_promo) %>%
+  summarise(
+    promedio = mean(compras, na.rm = TRUE),
+    mediana = median(compras, na.rm = TRUE),
+    desviacion_estandar = sd(compras, na.rm = TRUE),
+    total_clientes = n()
+  )
+print(resumen_monto_compras)
+
+ggplot(datos, aes(x = compra_promo, y = compras, fill = compra_promo)) +
+  geom_boxplot(alpha = 0.7) + 
+  scale_y_continuous(labels = dollar_format(prefix = "$", big.mark = ".", decimal.mark=",")) +
+  labs(
+    title = "Comparación del Monto de Compra",
+    subtitle = "Distribución del monto gastado por clientes que compraron y no compraron la promoción",
+    x = "¿Compró en Promoción?",
+    y = "Monto de la Compra"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none") 
 
 
 
