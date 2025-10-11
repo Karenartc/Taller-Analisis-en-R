@@ -33,6 +33,8 @@ datos$est_actual <- as.factor(datos$est_actual)
 datos$compra_promo <- as.factor(datos$compra_promo)
 str(datos)
 
+
+
 #Requerimientos descriptivos
 
 #1. Perfil del comprador
@@ -55,6 +57,8 @@ ggplot(top_10_perfiles,
     y = "Perfil Demográfico"
   ) +
   theme_minimal()
+
+
 
 #2. Genero y compra
 tasa_por_genero <- datos %>%
@@ -88,6 +92,8 @@ ggplot(tasa_por_genero, aes(x = sexo, y = tasa_conversion, fill = destacado)) +
   theme_minimal() +
   theme(legend.position = "bottom")
 
+
+
 #3. Educacion y compra
 tasa_por_educacion <- datos %>%
   group_by(educacion) %>%
@@ -111,10 +117,54 @@ ggplot(tasa_por_educacion, aes(x = tasa_conversion, y = fct_reorder(educacion, t
   scale_x_continuous(limits = c(0, max(tasa_por_educacion$tasa_conversion) * 1.1)) +
   theme_minimal()
 
+
+
 #4. Estados de deuda
+datos_con_salud <- datos %>%
+  mutate(
+    salud_financiera = case_when(
+      est_actual == "SIN DEUDA"      ~ "Saludable",
+      est_actual == "DEUDA DE 1 MES" ~ "En Riesgo",
+      est_actual == "DEUDA DE 2 MESES" ~ "En Riesgo",
+      TRUE                           ~ "Otro"
+    )
+  )
+
+tasa_por_salud <- datos_con_salud %>%
+  group_by(salud_financiera) %>%
+  summarise(
+    total_clientes = n(),
+    total_compradores = sum(compra_promo == "SI"),
+    tasa_conversion = (total_compradores / total_clientes) * 100
+  ) %>%
+  arrange(desc(tasa_conversion))
+print(tasa_por_salud)
+
+ggplot(tasa_por_salud, aes(x = salud_financiera, y = tasa_conversion, fill = salud_financiera)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = paste0(round(tasa_conversion, 1), "%"))) +
+  labs(
+    title = "Tasa de Conversión por Salud Financiera del Cliente",
+    subtitle = "Comparación entre clientes 'Saludables' (sin deuda) y 'En Riesgo' (con deuda)",
+    x = "Categoría de Salud Financiera",
+    y = "Tasa de Conversión (%)"
+  ) +
+  theme_minimal()
+
+
+
 #5. Monto de compra
+
+
+
 #6. Uso del cupo
+
+
+
 #7. Historial de atrasos
+
+
+
 #8. Antiguedad del cliente
 
 #Requerimientos predictivos
