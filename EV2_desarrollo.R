@@ -32,3 +32,49 @@ datos$actividad <- as.factor(datos$actividad)
 datos$est_actual <- as.factor(datos$est_actual)
 datos$compra_promo <- as.factor(datos$compra_promo)
 str(datos)
+
+#Requerimientos descriptivos
+
+#1. Perfil del comprador
+perfil_demografico_combinado <- datos %>%
+  filter(compra_promo == "SI") %>%
+  count(rango_etario, educacion, sexo, est_civil, actividad, sort = TRUE, name = "total_clientes")
+
+top_10_perfiles <- head(perfil_demografico_combinado, 10)
+print(top_10_perfiles)
+
+ggplot(top_10_perfiles,
+       aes(x = total_clientes,
+           y = fct_reorder(paste(rango_etario, educacion, sexo, est_civil, actividad, sep = " - "), total_clientes))) +
+  geom_col(fill = "#cc7a23") +
+  geom_text(aes(label = total_clientes)) + 
+  labs(
+    title = "Top 10 Perfiles Demográficos de Compradores",
+    subtitle = "Combinación de rango etario, educación, sexo, estado civil y actividad",
+    x = "Total de Clientes",
+    y = "Perfil Demográfico"
+  ) +
+  theme_minimal()
+
+#2. Genero y compra
+#3. Educacion y compra
+#4. Estados de deuda
+#5. Monto de compra
+#6. Uso del cupo
+#7. Historial de atrasos
+#8. Antiguedad del cliente
+#9. Actividad laboral
+#10. Consumo de productos A y B
+
+#Requerimientos predictivos
+
+#1. Prediccion de compra en promocion
+#2. Identificacion de clientes clave
+#3. Estimacion del monto de compra
+#4. Prediccion de comportamiento de pago
+#5. Segmentacion de clientes por consumo
+#6. Prediccion por perfil financiero
+#7. Estimacion de compras futuras del producto A
+#8. Prediccion de pagos de consumos
+#9. Relacion entre antiguedad y compra
+#10. Prediccion de consumo especifico
