@@ -201,10 +201,54 @@ ggplot(datos, aes(x = porcentaje_uso_cupo, fill = compra_promo)) +
 
 
 #7. Historial de atrasos
+resumen_atrasos <- datos %>%
+  group_by(compra_promo) %>%
+  summarise(
+    promedio_atrasos = mean(cant_atrasos, na.rm = TRUE),
+    mediana_atrasos = median(cant_atrasos, na.rm = TRUE),
+    desviacion_estandar = sd(cant_atrasos, na.rm = TRUE)
+  )
+print(resumen_atrasos)
+
+ggplot(datos, aes(x = compra_promo, y = cant_atrasos, fill = compra_promo)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Comparación del Historial de Atrasos en Pagos",
+    x = "¿Compró en Promoción?",
+    y = "Cantidad Histórica de Atrasos"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
 
 
 
 #8. Antiguedad del cliente
+datos_analisis_final <- datos %>%
+  mutate(
+    antiguedad = (2025 - anio_apertura), 
+    compra_promo_limpia = str_to_lower(compra_promo)
+  )
+tasa_por_antiguedad_anual <- datos_analisis_final %>%
+  group_by(antiguedad) %>%
+  summarise(
+    tasa_conversion = mean(compra_promo_limpia == "si") * 100
+  )
+print(tasa_por_antiguedad_anual)
+
+ggplot(tasa_por_antiguedad_anual, aes(x = antiguedad, y = tasa_conversion)) +
+  geom_line(color = "#cc7a23", size = 1.2) +
+  geom_point(color = "#967111", size = 3, shape = 21, fill = "white", stroke = 1.5) +
+  labs(
+    title = "Tasa de Conversión por Antigüedad del Cliente",
+    subtitle = "Tendencia de la probabilidad de compra año por año",
+    x = "Antigüedad del Cliente (Años)",
+    y = "Tasa de Conversión (%)"
+  ) +
+  theme_minimal()
+
+
+
+
 
 #Requerimientos predictivos
 
