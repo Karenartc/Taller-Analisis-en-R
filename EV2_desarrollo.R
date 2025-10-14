@@ -252,11 +252,48 @@ ggplot(tasa_por_antiguedad_anual, aes(x = antiguedad, y = tasa_conversion)) +
 
 #Requerimientos predictivos
 
+#División en datos de prueba y entrenamiento
+datos_modelo <- datos %>%
+  mutate(compra_promo = str_to_lower(compra_promo))
+set.seed(123)
+indices_entrenamiento <- createDataPartition(datos_modelo$compra_promo, p = 0.7, list = FALSE)
+datos_entrenamiento <- datos_modelo[indices_entrenamiento, ]
+datos_prueba <- datos_modelo[-indices_entrenamiento, ]
+
+cat("Datos listos. Entrenamiento:", nrow(datos_entrenamiento), "filas. Prueba:", nrow(datos_prueba), "filas.\n")
+
+
+
+
 #1. Prediccion de compra en promocion
+
+
+
 #2. Identificacion de clientes clave
+
+
+
 #3. Estimacion del monto de compra
+
+
+
 #4. Prediccion de comportamiento de pago
+
+
+
 #5. Segmentacion de clientes por consumo
+
+
+
 #6. Prediccion por perfil financiero
+
+
+
 #7. Estimacion de compras futuras del producto A
+
+
+
 #8. Prediccion de pagos de consumos
+
+
+
