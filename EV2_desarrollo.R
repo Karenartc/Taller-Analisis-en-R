@@ -179,6 +179,24 @@ ggplot(datos, aes(x = compra_promo, y = compras, fill = compra_promo)) +
 
 
 #6. Uso del cupo
+resumen_uso_cupo <- datos %>%
+  group_by(compra_promo) %>%
+  summarise(
+    promedio_uso = mean(porcentaje_uso_cupo, na.rm = TRUE),
+    mediana_uso = median(porcentaje_uso_cupo, na.rm = TRUE),
+    desviacion_estandar = sd(porcentaje_uso_cupo, na.rm = TRUE)
+  )
+print(resumen_uso_cupo)
+
+ggplot(datos, aes(x = porcentaje_uso_cupo, fill = compra_promo)) +
+  geom_density(alpha = 0.7) +
+  scale_x_continuous(labels = percent_format(scale = 1)) +
+  labs(
+    title = "Densidad del Uso del Cupo por Grupo de Compra",
+    x = "Porcentaje de Uso del Cupo",
+    y = "Densidad"
+  ) +
+  theme_minimal()
 
 
 
