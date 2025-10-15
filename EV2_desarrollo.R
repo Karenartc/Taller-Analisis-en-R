@@ -289,7 +289,22 @@ print(matriz_confusion_demografica)
 
 
 #2. Identificacion de clientes clave
+#usamos el arbol de decision creado en el requerimiento 1
+importancia_variables <- varImp(modelo_arbol)
+importancia_df <- rownames_to_column(as.data.frame(importancia_variables), "Variable") %>%
+  arrange(desc(Overall))
+print(head(importancia_df, 10))
 
+ggplot(head(importancia_df, 10), aes(x = Overall, y = fct_reorder(Variable, Overall))) +
+  geom_col(fill = "#cc7a23") +
+  geom_text(aes(label = round(Overall, 2)), hjust = -0.2, size = 3.5) +
+  labs(
+    title = "Gráfico 2: Características Más Importantes del Cliente",
+    subtitle = "Ranking de variables para predecir la compra en promoción",
+    x = "Importancia (calculada por el modelo)",
+    y = "Característica del Cliente"
+  ) +
+  theme_minimal()
 
 
 #3. Estimacion del monto de compra
