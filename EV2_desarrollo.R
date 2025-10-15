@@ -439,6 +439,27 @@ ggplot(datos_segmentados, aes(x = compras, y = unidades_prod_A, color = cluster)
 
 
 #6. Prediccion por perfil financiero
+datos_entrenamiento$compra_promo <- as.factor(datos_entrenamiento$compra_promo)
+set.seed(123)
+modelo_rf_financiero <- randomForest(
+  compra_promo ~ est_actual + cupo_max + cant_atrasos + porcentaje_uso_cupo + anio_apertura, 
+  data = datos_entrenamiento,
+  na.action = na.omit
+)
+predicciones_rf <- predict(modelo_rf_financiero, datos_prueba)
+niveles_completos <- c("no", "si")
+predicciones_factor_rf <- factor(predicciones_rf, levels = niveles_completos)
+reales_factor_rf <- factor(datos_prueba$compra_promo, levels = niveles_completos)
+matriz_confusion_rf <- confusionMatrix(predicciones_factor_rf, reales_factor_rf)
+print(matriz_confusion_rf)
+
+ggplot(as.data.frame(matriz_confusion_rf$table), aes(x = Prediction, y = Reference, fill = Freq)) +
+  geom_tile(color = "black") + 
+  geom_text(aes(label = Freq), size = 6, color = "white") +
+  scale_fill_gradient(low = "#967111", high = "#cc7a23") +
+  labs(title = "Gráfico 6 (Mejorado): Rendimiento del Modelo Random Forest",
+       subtitle = "Predicción usando únicamente variables financieras") +
+  theme_minimal()
 
 
 
