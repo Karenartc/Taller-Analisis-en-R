@@ -396,7 +396,45 @@ ggplot(as.data.frame(matriz_confusion_mejorada$table), aes(x = Prediction, y = R
   theme_minimal()
 
 
+
 #5. Segmentacion de clientes por consumo
+datos_cluster <- datos %>%
+  select(compras, unidades_prod_A, unidades_prod_B) %>%
+  na.omit() %>%
+  scale()
+wss <- vector()
+for (i in 1:10) { set.seed(123); wss[i] <- sum(kmeans(datos_cluster, centers = i, nstart = 25)$withinss) }
+k_optimo <- 3
+set.seed(123)
+modelo_kmeans <- kmeans(datos_cluster, centers = k_optimo, nstart = 25)
+datos_segmentados <- datos %>% na.omit()
+datos_segmentados$cluster <- as.factor(modelo_kmeans$cluster)
+centroides_escalados <- as.data.frame(modelo_kmeans$centers)
+medias_originales <- attr(datos_cluster, "scaled:center")
+desviaciones_originales <- attr(datos_cluster, "scaled:scale")
+centroides <- as.data.frame(t(t(centroides_escalados) * desviaciones_originales + medias_originales))
+centroides$cluster <- as.factor(1:k_optimo)
+perfil_clusters <- datos_segmentados %>%
+  group_by(cluster) %>%
+  summarise(
+    promedio_compras = mean(compras),
+    promedio_prod_A = mean(unidades_prod_A),
+    promedio_prod_B = mean(unidades_prod_B),
+    n_clientes = n()
+  )
+print(perfil_clusters)
+
+ggplot(datos_segmentados, aes(x = compras, y = unidades_prod_A, color = cluster)) +
+  geom_point(alpha = 0.5) +
+  geom_point(data = centroides, aes(x = compras, y = unidades_prod_A), 
+             shape = 8, size = 5, color = "black", stroke = 1.5) +
+  labs(
+    title = "Gráfico 5: Segmentación de Clientes por Consumo",
+    subtitle = paste0(k_optimo, " perfiles de clientes identificados mediante K-Means"),
+    x = "Monto Total de Compras",
+    y = "Unidades Compradas del Producto A"
+  ) +
+  theme_minimal()
 
 
 
