@@ -464,6 +464,22 @@ ggplot(as.data.frame(matriz_confusion_rf$table), aes(x = Prediction, y = Referen
 
 
 #7. Estimacion de compras futuras del producto A
+datos_series_tiempo <- datos %>%
+  group_by(fecha) %>%
+  summarise(total_unidades_A = sum(unidades_prod_A, na.rm = TRUE)) %>%
+  arrange(fecha)
+print(head(datos_series_tiempo))
+
+ggplot(datos_series_tiempo, aes(x = fecha, y = total_unidades_A)) +
+  geom_line(color = "#967111", linewidth = 0.8) + 
+  geom_smooth(method = "loess", color = "red", se = FALSE, linetype = "dashed") +
+  labs(
+    title = "Gráfico 7: Demanda Histórica del Producto A",
+    subtitle = "Unidades vendidas por día y tendencia general (línea roja)",
+    x = "Fecha",
+    y = "Total de Unidades Vendidas Diarias"
+  ) +
+  theme_minimal()
 
 
 
