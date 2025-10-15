@@ -264,8 +264,27 @@ cat("Datos listos. Entrenamiento:", nrow(datos_entrenamiento), "filas. Prueba:",
 
 
 
-
 #1. Prediccion de compra en promocion
+modelo_arbol_demografico <- rpart(
+  compra_promo ~ rango_etario + educacion + sexo + est_civil + actividad, 
+  data = datos_entrenamiento, 
+  method = "class",
+  control = rpart.control(cp = 0.005)
+)
+
+rpart.plot(
+  modelo_arbol_demografico,
+  type = 2, extra = 101, box.palette = "Oranges",
+  shadow.col = "darkgray", nn = TRUE, fallen.leaves = TRUE,
+  main = "Gráfico 1: Predicción de Compra Usando Solo Perfil Demográfico"
+)
+
+predicciones_demograficas <- predict(modelo_arbol_demografico, datos_prueba, type = "class")
+niveles_completos <- c("no", "si") 
+predicciones_factor_dem <- factor(predicciones_demograficas, levels = niveles_completos)
+reales_factor_dem <- factor(datos_prueba$compra_promo, levels = niveles_completos)
+matriz_confusion_demografica <- confusionMatrix(predicciones_factor_dem, reales_factor_dem)
+print(matriz_confusion_demografica)
 
 
 
