@@ -337,7 +337,63 @@ ggplot(resultados_regresion, aes(x = MontoReal, y = MontoPredicho)) +
 
 
 #4. Prediccion de comportamiento de pago
+modelo_arbol_deuda <- rpart(
+  est_actual ~ cant_atrasos + porcentaje_uso_cupo + cupo_max + compras_promedio_anio, 
+  data = datos_entrenamiento, 
+  method = "class"
+)
+predicciones_deuda <- predict(modelo_arbol_deuda, datos_prueba, type = "class")
+niveles_deuda <- levels(datos_entrenamiento$est_actual)
+predicciones_factor_deuda <- factor(predicciones_deuda, levels = niveles_deuda)
+reales_factor_deuda <- factor(datos_prueba$est_actual, levels = niveles_deuda)
+matriz_confusion_deuda <- confusionMatrix(predicciones_factor_deuda, reales_factor_deuda)
+print(matriz_confusion_deuda)
 
+ggplot(as.data.frame(matriz_confusion_deuda$table), aes(x = Prediction, y = Reference, fill = Freq, label = Freq)) +
+  geom_tile(color = "black") +
+  geom_text(size = 5, color = "white") +
+  scale_fill_gradient(low = "#967111", high = "#cc7a23") +
+  labs(
+    title = "Gráfico 4: Matriz de Confusión para Predicción de Comportamiento de Pago",
+    subtitle = "Rendimiento del modelo para clasificar el estado de deuda del cliente",
+    x = "Estado de Deuda Predicho por el Modelo",
+    y = "Estado de Deuda Real"
+  ) +
+  theme_minimal()
+
+
+print("--- Datos de Entrenamiento ANTES del Balanceo ---")
+table(datos_entrenamiento$est_actual)
+predictores_entrenamiento <- datos_entrenamiento %>% 
+  select(cant_atrasos, porcentaje_uso_cupo, cupo_max, compras_promedio_anio)
+objetivo_entrenamiento <- datos_entrenamiento$est_actual
+set.seed(123) 
+datos_entrenamiento_balanceados <- upSample(
+  x = predictores_entrenamiento,
+  y = objetivo_entrenamiento,
+  yname = "est_actual" 
+)
+print("--- Datos de Entrenamiento DESPUÉS del Balanceo ---")
+table(datos_entrenamiento_balanceados$est_actual)
+modelo_arbol_deuda_mejorado <- rpart(
+  est_actual ~ cant_atrasos + porcentaje_uso_cupo + cupo_max + compras_promedio_anio, 
+  data = datos_entrenamiento_balanceados, 
+  method = "class"
+)
+predicciones_deuda_mejorado <- predict(modelo_arbol_deuda_mejorado, datos_prueba, type = "class")
+niveles_deuda <- levels(datos_entrenamiento$est_actual)
+predicciones_factor_mejorado <- factor(predicciones_deuda_mejorado, levels = niveles_deuda)
+reales_factor_mejorado <- factor(datos_prueba$est_actual, levels = niveles_deuda)
+matriz_confusion_mejorada <- confusionMatrix(predicciones_factor_mejorado, reales_factor_mejorado)
+print("--- Rendimiento del NUEVO Modelo Mejorado ---")
+print(matriz_confusion_mejorada)
+
+ggplot(as.data.frame(matriz_confusion_mejorada$table), aes(x = Prediction, y = Reference, fill = Freq, label = Freq)) +
+  geom_tile(color = "black") +
+  geom_text(size = 5, color = "white") +
+  scale_fill_gradient(low = "#967111", high = "#cc7a23") +
+  labs(title = "Gráfico 4 (Mejorado): Matriz de Confusión del Modelo Balanceado") +
+  theme_minimal()
 
 
 #5. Segmentacion de clientes por consumo
