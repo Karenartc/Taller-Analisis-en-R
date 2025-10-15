@@ -484,6 +484,21 @@ ggplot(datos_series_tiempo, aes(x = fecha, y = total_unidades_A)) +
 
 
 #8. Prediccion de pagos de consumos
+resultados_regresion <- resultados_regresion %>%
+  mutate(residuo = MontoReal - MontoPredicho)
+summary(resultados_regresion$residuo)
 
+ggplot(resultados_regresion, aes(x = residuo)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "#967111", alpha = 0.7) +
+  geom_density(color = "red", linewidth = 1) + # Línea de densidad
+  geom_vline(xintercept = 0, color = "black", linetype = "dashed", size = 1) + # Línea en Cero
+  scale_x_continuous(labels = scales::dollar) +
+  labs(
+    title = "Gráfico 8: Distribución de los Errores del Modelo (Residuos)",
+    subtitle = "Un buen modelo tiene errores centrados simétricamente alrededor de cero",
+    x = "Error de Predicción (Monto Real - Monto Predicho)",
+    y = "Densidad"
+  ) +
+  theme_minimal()
 
 
