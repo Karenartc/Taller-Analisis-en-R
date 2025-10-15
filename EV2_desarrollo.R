@@ -307,7 +307,32 @@ ggplot(head(importancia_df, 10), aes(x = Overall, y = fct_reorder(Variable, Over
   theme_minimal()
 
 
+
 #3. Estimacion del monto de compra
+modelo_regresion <- lm(
+  compras ~ cupo_max + porcentaje_uso_cupo + cant_atrasos + est_actual + compras_promedio_anio, 
+  data = datos_entrenamiento
+)
+summary(modelo_regresion)
+
+predicciones_monto <- predict(modelo_regresion, datos_prueba)
+resultados_regresion <- data.frame(
+  MontoReal = datos_prueba$compras,
+  MontoPredicho = predicciones_monto
+)
+
+ggplot(resultados_regresion, aes(x = MontoReal, y = MontoPredicho)) +
+  geom_point(alpha = 0.5, color = "#cc7a23") +
+  geom_abline(color = "red", linetype = "dashed", linewidth = 1) + 
+  scale_x_continuous(labels = scales::dollar) + 
+  scale_y_continuous(labels = scales::dollar) +
+  labs(
+    title = "Gráfico 3: Desempeño del Modelo de Estimación de Compras",
+    subtitle = "Comparación de Montos Reales vs. Montos Predichos por el Modelo",
+    x = "Monto de Compra Real",
+    y = "Monto de Compra Predicho"
+  ) +
+  theme_minimal()
 
 
 
