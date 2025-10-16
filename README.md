@@ -26,27 +26,19 @@ El análisis se divide en dos fases principales:
 
 ---
 
-### 🚀 **Resultados Destacados**
+### 🚀 Resultados Destacados
 
-A continuación, se muestran algunas de las visualizaciones generadas durante el análisis.
+A continuación, se presenta una **selección** de las visualizaciones más representativas del proyecto. El análisis completo y la explicación detallada de cada uno de los 16 requerimientos se encuentran en el **informe completo del proyecto**.
 
-#### Hallazgos Descriptivos
-*Aquí puedes poner un título descriptivo para la imagen.*
-**Gráfico de los 10 productos más vendidos**
-![Gráfico de Productos](ImgRequerimientos/descriptivo1.png)
+---
 
-**Distribución de compras por categoría**
-![Distribución de compras](ImgRequerimientos/descriptivo2.png)
+**Visualización del Requerimiento Descriptivo 1**
+![Visualización del Requerimiento Descriptivo 1](ImgRequerimientos/descriptivo1.png)
 
+---
 
-#### Resultados del Modelo Predictivo
-*Y aquí para las imágenes del modelo.*
-**Matriz de Confusión del Modelo**
-![Matriz de Confusión](ImgRequerimientos/predictivo1.png)
-
-**Curva ROC para evaluar el rendimiento**
-![Curva ROC](ImgRequerimientos/predictivo4.png)
-
+**Visualización del Requerimiento Predictivo 5**
+![Visualización del Requerimiento Predictivo 5](ImgRequerimientos/predictivo5.png)
 ---
 
 ### 🛠️ **Tecnologías Utilizadas**
@@ -66,7 +58,7 @@ Para replicar este análisis, sigue los siguientes pasos:
 
 1.  **Clona el repositorio:**
     ```bash
-    git clone [https://www.youtube.com/watch?v=dnxdIzF8p3k](https://www.youtube.com/watch?v=dnxdIzF8p3k)
+    git clone [https://github.com/Karenartc/Taller-Analisis-en-R.git](https://github.com/Karenartc/Taller-Analisis-en-R.git)
     ```
 2.  **Abre el proyecto** en RStudio.
 3.  **Instala las dependencias** ejecutando el siguiente comando en la consola de R:
