@@ -290,7 +290,7 @@ print(matriz_confusion_demografica)
 
 #2. Identificacion de clientes clave
 #usamos el arbol de decision creado en el requerimiento 1
-importancia_variables <- varImp(modelo_arbol)
+importancia_variables <- varImp(modelo_arbol_demografico)
 importancia_df <- rownames_to_column(as.data.frame(importancia_variables), "Variable") %>%
   arrange(desc(Overall))
 print(head(importancia_df, 10))
